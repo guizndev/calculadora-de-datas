@@ -1,0 +1,103 @@
+body {
+    font-family: 'Roboto', sans-serif;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    margin: 0;
+    background-color: #2c3e50; /* Cor de fundo escura */
+    color: #ecf0f1; /* Cor do texto clara */
+}
+
+.container {
+    width: 100%;
+    max-width: 500px;
+    padding: 2rem;
+}
+
+h1 {
+    text-align: center;
+    color: #ecf0f1; /* Cor do título clara */
+    margin-bottom: 2rem;
+}
+
+.card {
+    background-color: #34495e; /* Cor de fundo da card */
+    padding: 2rem;
+    border-radius: 10px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+}
+
+.input-group {
+    margin-bottom: 1.5rem;
+}
+
+label {
+    display: block;
+    margin-bottom: 0.5rem;
+    font-weight: bold;
+    color: #ecf0f1; /* Cor do texto do rótulo clara */
+}
+
+input {
+    width: 100%;
+    padding: 0.75rem;
+    font-size: 1rem;
+    border: 2px solid #7f8c8d; /* Cor da borda do input */
+    border-radius: 4px;
+    box-sizing: border-box;
+    transition: border-color 0.3s;
+    background-color: #2c3e50; /* Cor de fundo do input */
+    color: #ecf0f1; /* Cor do texto do input */
+}
+
+input:focus {
+    outline: none;
+    border-color: #3498db; /* Cor da borda ao focar */
+}
+
+button {
+    display: block;
+    width: 100%;
+    padding: 0.75rem;
+    font-size: 1rem;
+    background-color: #3498db; /* Cor do botão */
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+button:hover {
+    background-color: #2980b9; /* Cor do botão ao passar o mouse */
+}
+
+#resultados {
+    margin-top: 1.5rem;
+}
+
+.resultado {
+    background-color: #1abc9c; /* Cor de fundo dos resultados */
+    border: 1px solid #16a085; /* Cor da borda dos resultados */
+    border-radius: 4px;
+    padding: 1rem;
+    margin-bottom: 1rem;
+}
+
+footer {
+    text-align: center;
+    margin-top: 2rem;
+    color: #7f8c8d;
+    font-size: 0.9rem;
+}
+
+@media (max-width: 600px) {
+    .container {
+        padding: 1rem;
+    }
+    
+    .card {
+        padding: 1.5rem;
+    }
+}
