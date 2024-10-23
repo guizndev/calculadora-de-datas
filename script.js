@@ -17,7 +17,6 @@ function adicionarDiasExtra(dataInicial, dias) {
     while (dataAtual < dataFinal) {
         // Verifica se a data atual é 20/12 e se não está dentro do período de 140 dias
         if (dataAtual.getMonth() === 11 && dataAtual.getDate() === 20) {
-            // Verifica se a data atual está fora do período de 140 dias
             const periodo140Dias = new Date(dataInicial.getTime() + 140 * 24 * 60 * 60 * 1000);
             if (dataAtual > periodo140Dias) {
                 dataFinal = new Date(dataFinal.getTime() + 32 * 24 * 60 * 60 * 1000);
@@ -40,28 +39,40 @@ function ajustarDataFinal(dataFinal) {
 }
 
 function calcularPrescricao(dataInicial) {
-    let dataPrescricao1 = new Date(dataInicial);
-    let dataPrescricao2 = new Date(dataInicial);
-    let dataPrescricao3 = new Date(dataInicial);
-
-    // Adicionando 1 ano, 2 anos e 5 anos
-    dataPrescricao1.setFullYear(dataPrescricao1.getFullYear() + 1);
-    dataPrescricao2.setFullYear(dataPrescricao2.getFullYear() + 2);
-    dataPrescricao3.setFullYear(dataPrescricao3.getFullYear() + 5);
-
-    // Adicionando 140 dias
-    dataPrescricao1 = adicionarDiasExtra(dataPrescricao1, 140);
-    dataPrescricao2 = adicionarDiasExtra(dataPrescricao2, 140);
-    dataPrescricao3 = adicionarDiasExtra(dataPrescricao3, 140);
-
-    // Ajuste para garantir que a data final não ultrapasse o mês correto
-    dataPrescricao3.setDate(dataPrescricao3.getDate() - 1); // Ajuste para evitar o mês a mais
-
-    return {
-        resultado1: dataPrescricao1,
-        resultado2: dataPrescricao2,
-        resultado3: dataPrescricao3
+    // Adiciona 140 dias à data inicial
+    let dataPrescricao = adicionarDiasExtra(new Date(dataInicial), 140);
+    
+    // Verifica se a data após a adição de 140 dias cai entre 20/12 e 20/01
+    const verificaPeriodo = (data) => {
+        const mes = data.getMonth();
+        const dia = data.getDate();
+        return (mes === 11 && dia >= 20) || (mes === 0 && dia <= 20);
     };
+
+    // Guarda a informação se a data está no período especificado
+    let diasFaltando = 0;
+    if (verificaPeriodo(dataPrescricao)) {
+        const dataLimite = new Date(dataPrescricao.getFullYear(), 0, 21); // 21/01 do mesmo ano
+        diasFaltando = Math.ceil((dataLimite - dataPrescricao) / (1000 * 60 * 60 * 24)); // Calcula os dias faltantes
+    }
+
+    // Agora, adiciona os dias adicionais (365, 730, 1826)
+    const resultados = {};
+    const diasAdicionais = [365, 730, 1826];
+
+    diasAdicionais.forEach((dias, index) => {
+        let dataFinal = ajustarDataFinal(adicionarDiasExtra(dataPrescricao, dias));
+
+        // Adiciona os dias faltantes se a data original estava no período
+        if (verificaPeriodo(dataPrescricao)) {
+            dataFinal = new Date(dataFinal.getTime() + diasFaltando * 24 * 60 * 60 * 1000);
+        }
+
+        // Armazena o resultado
+        resultados[`resultado${index + 1}`] = dataFinal;
+    });
+
+    return resultados;
 }
 
 function calcular() {
@@ -75,7 +86,7 @@ function calcular() {
 
     try {
         const [dia, mes, ano] = dataStr.split('/').map(Number);
-        let dataInicial = new Date(ano, mes -1, dia);
+        let dataInicial = new Date(ano, mes - 1, dia);
         dataInicial = ajustarPeriodoCovid(dataInicial);
 
         const data365Dias = ajustarDataFinal(adicionarDiasExtra(dataInicial, 365 + 140));
@@ -125,6 +136,7 @@ function formatarEntradaData(event) {
     input.value = value;
 }
 
+// Eventos
 document.getElementById('calcular').addEventListener('click', calcular);
 document.getElementById('data-inicial').addEventListener('input', formatarEntradaData);
 document.getElementById('data-inicial').addEventListener('keyup', function(event) {
